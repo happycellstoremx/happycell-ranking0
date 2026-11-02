@@ -5,7 +5,7 @@ exports.handler=async(event)=>{
  let d;try{d=parse(event)}catch(e){return respond(400,{error:'Solicitud inválida'})}
  if(!uuid.test(d.participantId||'')||!Number.isInteger(d.level)||d.level<0||d.level>100||
  !Number.isInteger(d.points)||d.points<0||d.points>500000||
- typeof d.alias!=='string'||!/^[\\p{L}\\p{N} _.-]{2,22}$/u.test(d.alias.trim()))
+ typeof d.alias!=='string'||!/^[\p{L}\p{N} _.-]{2,22}$/u.test(d.alias.trim()))
  return respond(400,{error:'Datos de práctica inválidos'});
  try{
   const data=await db('rpc/hc_record_practice',{method:'POST',body:{p_player_id:d.participantId,p_alias:d.alias.trim(),p_level:d.level,p_points:d.points},returnRecords:true});
