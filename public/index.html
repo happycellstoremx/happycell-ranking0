@@ -387,7 +387,7 @@ h2{font-size:24px}
         <button class="secondary" id="repeatVoice" type="button">🔊 Escuchar mi premio de nuevo</button>
       <div class="record-signup" id="recordSignup">
         <div class="record-title">🏅 Registra tu récord</div>
-        <p class="record-explain">Escribe tu apodo para guardar tu récord. El ranking oficial requiere conexión y verificación de Happycell.</p>
+        <p class="record-explain">Tu récord se comparte en línea al registrarlo. Si ya guardaste tu apodo antes, se envía automáticamente al terminar. Los récords oficiales requieren verificación.</p>
         <div class="record-summary"><span>🏁 Nivel <b id="recordLevel">0</b></span><span>⭐ <b id="recordPoints">0</b> puntos</span></div>
         <form id="recordForm" class="record-form">
           <label for="playerName">Nombre o apodo de jugador</label>
@@ -984,6 +984,8 @@ h2{font-size:24px}
     $('playerName').value=getLastAlias();$('recordSend').classList.add('hidden');$('recordStatus').textContent='';
     refreshFacebookScore();
     $('result').classList.remove('hidden');
+    // Si el jugador ya eligió apodo antes, publica el récord al terminar.
+    if(getLastAlias().trim().length>=2){setTimeout(()=>{if(phase==='won')registerRecord({preventDefault(){}})},200);}
     setTimeout(()=>$('result').scrollIntoView({behavior:'smooth',block:'nearest'}),250);
   }
   // Registros locales para probar la interfaz. Nunca se deben usar para adjudicar el premio real.
@@ -1059,6 +1061,15 @@ h2{font-size:24px}
     $('recordStatus').textContent=stored?'🩷 Récord de práctica guardado en este celular.':'El navegador no pudo conservar el récord local.';
     // El servidor establece el periodo de participación. No se puede registrar
     // oficialmente un récord antes del 9 ni después del 15 de noviembre.
+    if(contestPhase()==='upcoming'){
+      $('recordStatus').textContent='📡 Enviando tu récord de práctica al ranking compartido…';
+      try{
+        const res=await fetch('/.netlify/functions/practice-finish',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({participantId:playerId(),alias,level:record.level,points:record.points})});
+        const body=await res.json();if(!res.ok)throw Error(body.error||'No se pudo guardar en línea');
+        $('recordStatus').textContent='🌍 ¡Récord compartido con todos los jugadores!';loadOnlineRecords();
+      }catch(e){$('recordStatus').textContent='⚠️ Récord guardado en este celular; no se pudo compartir: '+String(e.message).slice(0,100);}
+      return;
+    }
     if(officialStartPromise)await officialStartPromise;
     if(officialRunId){
       $('recordStatus').textContent='📡 Enviando tu récord al ranking provisional...';
@@ -1124,42 +1135,24 @@ h2{font-size:24px}
     if(rankRefreshInProgress)return;
     rankRefreshInProgress=true;
     const btn=$('refreshRanking');btn.disabled=true;
+    const mode=contestPhase();
     try{
-      const mode=contestPhase();
-      if(mode==='upcoming'){
-        // El 8 de noviembre y antes: práctica local. No consultar ni mostrar
-        // resultados oficiales en el ranking principal antes del concurso.
-        leaderMode='local';displayRecords();
-        $('rankStatus').textContent='🟣 RANKING DE PRÁCTICA · SOLO ESTE CELULAR';
-        $('rankStatus').className='rank-online-status offline';
-        $('rankingNotice').textContent='🎮 Las marcas de práctica no participan por los premios. El ranking oficial comienza vacío el lunes 9 de noviembre a las 12:00 a. m. (Tijuana).';
-        return;
-      }
-      // Del 9 al 15 y también al finalizar: SOLO tabla oficial de Supabase.
-      // Nunca rellenar esta clasificación con puntuaciones locales de práctica.
-      const res=await fetch('/.netlify/functions/leaderboard',{cache:'no-store'});
-      if(!res.ok)throw new Error('Ranking oficial no disponible');
-      const data=await res.json();
-      if(!Array.isArray(data.records))throw new Error('Respuesta incompleta');
+      const url=mode==='upcoming'?'/.netlify/functions/practice-leaderboard':'/.netlify/functions/leaderboard';
+      const res=await fetch(url,{cache:'no-store'});
+      if(!res.ok)throw new Error('Ranking en línea no disponible');
+      const data=await res.json();if(!Array.isArray(data.records))throw new Error('Respuesta incompleta');
       leaderMode='online';officialApiOnline=true;
       renderOnlineRecords(data.records);
-      $('rankStatus').textContent=(mode==='active'?'🟢 RANKING OFICIAL EN VIVO':'🏁 CLASIFICACIÓN OFICIAL FINAL')+' · '+(data.records.length?data.records.length+' marcas':'sin jugadores todavía');
+      $('rankStatus').textContent=(mode==='upcoming'?'🟢 PRÁCTICA EN LÍNEA · TODOS LOS CELULARES':mode==='active'?'🟢 RANKING OFICIAL EN VIVO':'🏁 CLASIFICACIÓN OFICIAL FINAL')+' · '+(data.records.length?data.records.length+' mejores marcas':'esperando jugadores');
       $('rankStatus').className='rank-online-status online';
-      $('rankingNotice').textContent=mode==='active'
-        ?'🏆 Solo puntuaciones oficiales de partidas iniciadas durante el concurso. Los resultados son provisionales y requieren validación.'
-        :'🏆 Ranking oficial del 9 al 15 de noviembre, sujeto a revisión antes de premiar.';
+      $('rankingNotice').textContent=mode==='upcoming'
+        ?'🌍 Ranking compartido de práctica. Se actualiza automáticamente cada 10 segundos. El 9 de noviembre inicia un ranking oficial limpio y separado.'
+        :mode==='active'?'🏆 Solo puntuaciones oficiales de partidas iniciadas durante el concurso. Los resultados requieren validación.':'🏆 Ranking oficial del 9 al 15 de noviembre, sujeto a revisión.';
     }catch(e){
-      // Nunca mostrar un ranking de práctica como oficial al perder conexión.
-      if(contestPhase()!=='upcoming'){
-        leaderMode='online';renderOnlineRecords([]);
-        $('rankStatus').textContent='🔴 RANKING OFICIAL SIN CONEXIÓN';
-        $('rankStatus').className='rank-online-status offline';
-        $('rankingNotice').textContent='⚠️ No pudimos consultar la clasificación oficial. Los récords personales se conservan más abajo, pero NO se muestran como oficiales. Pulsa actualizar para reintentar.';
-      }else{
-        leaderMode='local';displayRecords();
-        $('rankStatus').textContent='🟣 RANKING DE PRÁCTICA · SOLO ESTE CELULAR';
-        $('rankStatus').className='rank-online-status offline';
-      }
+      leaderMode='online';renderOnlineRecords([]);
+      $('rankStatus').textContent='🔴 RANKING EN LÍNEA SIN CONEXIÓN';
+      $('rankStatus').className='rank-online-status offline';
+      $('rankingNotice').textContent='⚠️ No se pudo consultar el ranking compartido. Tus marcas personales permanecen abajo. Pulsa Actualizar para reintentar.';
     }finally{btn.disabled=false;rankRefreshInProgress=false;}
   }
   async function initRealtimeRanking(){
