@@ -491,18 +491,21 @@ h2{font-size:24px}
     {id:'mantenimiento',name:'¡Mantenimiento gratis!',spoken:'un mantenimiento gratis',weight:20}
   ];
   const MAX_LEVEL=100;
+  // Cada bloque de cinco niveles incrementa objetivos y velocidad.
+  // Del 1 al 5: etapa 0; del 6 al 10: etapa 1; ... del 96 al 100: etapa 19.
+  // El tiempo permanece fijo en 24 segundos durante todo el reto.
   const LEVELS=Array.from({length:MAX_LEVEL},(_,i)=>{
-    const lvl=i+1;
-    const difficulty=Math.pow(lvl/MAX_LEVEL,1.35);
+    const stage=Math.floor(i/5);
     return {
-      goal:Math.min(88,10+Math.floor(lvl*0.78)+Math.floor(difficulty*18)),
+      goal:10+2*stage,
       time:24,
-      maxBubbles:Math.min(26,11+Math.floor(lvl/8)+Math.floor(difficulty*6)),
-      spawn:Math.max(120,470-Math.floor(lvl*2.8)-Math.floor(difficulty*70)),
-      lifeMin:Math.max(700,2250-Math.floor(lvl*11)-Math.floor(difficulty*620)),
-      lifeMax:Math.max(1100,3150-Math.floor(lvl*13)-Math.floor(difficulty*760)),
-      bubbleMin:Math.max(18,43-Math.floor(lvl/5)-Math.floor(difficulty*6)),
-      bubbleMax:Math.max(32,64-Math.floor(lvl/4)-Math.floor(difficulty*9))
+      maxBubbles:Math.min(22,11+Math.floor(stage*0.55)),
+      spawn:Math.max(210,490-14*stage),
+      lifeMin:Math.max(1100,2200-55*stage),
+      lifeMax:Math.max(1500,3180-85*stage),
+      bubbleMin:Math.max(18,43-Math.floor(stage*1.25)),
+      bubbleMax:Math.max(32,64-Math.floor(stage*1.5)),
+      bob:Math.max(1,2.35-stage*.07)
     };
   });
   const WA='526651394727',KEY='happycell_bubble_reward_v100',BOARD_KEY='happycell_local_records_v100',PLAYER_KEY='happycell_player_alias_v100';
@@ -535,11 +538,7 @@ h2{font-size:24px}
   // La competición no termina en el nivel 6: dificultad creciente sin tope de nivel.
   function currentLevelCfg(){
     if(levelIndex<LEVELS.length)return LEVELS[levelIndex];
-    const extra=levelIndex-LEVELS.length+1;
-    return {goal:Math.min(65,30+extra*3),time:24,
-      maxBubbles:Math.min(25,20+Math.floor(extra/2)),spawn:Math.max(170,280-extra*7),
-      lifeMin:Math.max(900,1450-extra*40),lifeMax:Math.max(1180,2200-extra*42),
-      bubbleMin:Math.max(18,32-Math.floor(extra/2)),bubbleMax:Math.max(32,48-Math.floor(extra/2))};
+    return LEVELS[MAX_LEVEL-1];
   }
   // El iPhone 15 o iPad A16 no forma parte de los premios aleatorios: gana el campeón del reto.
   function drawPrize(){
@@ -748,7 +747,7 @@ h2{font-size:24px}
     const w=field.clientWidth,h=field.clientHeight;
     const pad=9;
     const maxX=Math.max(pad,w-size-pad),maxY=Math.max(pad,h-size-pad);
-    const speedUnits=2+Math.floor(levelIndex/6)*6.5;
+    const speedUnits=2+Math.floor(levelIndex/5)*5;
     const pixelsPerSecond=72+speedUnits*3;
     const duration=2300;
     el.style.setProperty('--dash-duration',duration+'ms');
@@ -862,7 +861,7 @@ h2{font-size:24px}
     const size=cfg.bubbleMin+rand(Math.max(8,cfg.bubbleMax-cfg.bubbleMin+1));
     const w=field.clientWidth,h=field.clientHeight;
     const left=10+rand(Math.max(1,w-size-20)),top=14+rand(Math.max(1,h-size-28));
-    el.style.cssText=`width:${size}px;height:${size}px;left:${left}px;top:${top}px;--bob:${1.7+Math.random()*1.5}s;--bubble-size:${size}px`;
+    el.style.cssText=`width:${size}px;height:${size}px;left:${left}px;top:${top}px;--bob:${(cfg.bob+Math.random()*.5).toFixed(2)}s;--bubble-size:${size}px`;
     // Bomba aleatoria: aparece mezclada con letras y figuras kawaii. Se puede esquivar.
     // La frecuencia aumenta ligeramente a medida que sube la dificultad.
     const isBomb=rand(100)<Math.min(15,5+Math.floor(levelIndex/13));
