@@ -3,7 +3,7 @@ exports.handler=async(event)=>{
  if(event.httpMethod!=='POST')return respond(405,{error:'Método no permitido'});
  if(phase()!=='upcoming')return respond(403,{error:'El periodo de práctica compartida ha terminado'});
  let d;try{d=parse(event)}catch(e){return respond(400,{error:'Solicitud inválida'})}
- if(!uuid.test(d.participantId||'')||!Number.isInteger(d.level)||d.level<0||d.level>100||
+ if(!uuid.test(d.participantId||'')||!Number.isInteger(d.level)||d.level<0||d.level>50||
  !Number.isInteger(d.points)||d.points<0||d.points>500000||
  typeof d.alias!=='string'||!/^[\p{L}\p{N} _.-]{2,22}$/u.test(d.alias.trim()))
  return respond(400,{error:'Datos de práctica inválidos'});
