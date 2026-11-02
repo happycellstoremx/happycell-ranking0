@@ -310,11 +310,22 @@ h2{font-size:24px}
 .rank-row:nth-child(3){background:#fff8fa;border-radius:12px}
 .rank-value{font-size:13px}
 
-/* Ranking de práctica y oficial: los récords personales nunca se mezclan con los oficiales. */
-.personal-records-card{margin-top:14px;padding:15px;border-radius:18px;background:linear-gradient(135deg,#fff7fc,#effcff);border:1px solid #e9daef}
-.personal-records-card h3{font-size:17px;margin:0 0 7px;text-align:center;font-family:'Baloo 2','Fredoka',ui-rounded,sans-serif}
-.personal-records-card p{font-size:12px;margin:8px 0;color:#746b86;text-align:center;line-height:1.45}
-.personal-records-card .rank-row{box-shadow:none;border:1px solid #f0e6f4}
+/* Happycell · títulos, ubicación y concurso centrados (escritorio y celular) */
+.social-heading,.game-heading{justify-content:center;text-align:center}
+.social-heading>div,.game-heading>div{width:100%;min-width:0}
+.social-heading .tiny,.game-heading .tiny{margin-top:7px;line-height:1.45}
+.social.map{display:grid;grid-template-columns:42px minmax(0,1fr) 42px;align-items:center;text-align:center;gap:8px}
+.social.map>span:nth-child(2){min-width:0;text-align:center;line-height:1.3}
+.social.map .arrow{margin-left:0;justify-self:center}
+.contest-period{flex-direction:column;justify-content:center;text-align:center;gap:5px}
+.contest-period>div{width:100%;min-width:0}
+.contest-period .period-icon{line-height:1.1}
+.lucky-banner{flex-direction:column;justify-content:center;text-align:center;gap:12px}
+.lucky-copy{width:100%;text-align:center;text-transform:uppercase}
+.lucky-copy strong{line-height:1.25;overflow-wrap:anywhere}
+.lucky-copy small{line-height:1.55}
+.lucky-odds{line-height:1.5}
+@media(max-width:365px){.social.map{grid-template-columns:38px minmax(0,1fr) 38px;gap:5px}.lucky-banner{padding:14px 10px}.lucky-copy strong{font-size:16px}}
 </style>
 </head>
 <body>
@@ -331,7 +342,7 @@ h2{font-size:24px}
   </header>
 
   <section id="redes" aria-labelledby="social-title">
-    <div class="section-head"><div><div class="eyebrow">Conecta con nosotros</div><h2 id="social-title">Nuestras redes 💖</h2></div><span class="tiny">¡Síguenos!</span></div>
+    <div class="section-head social-heading"><div><div class="eyebrow">Conecta con nosotros</div><h2 id="social-title">Nuestras redes 💖</h2><p class="tiny">¡Síguenos!</p></div></div>
     <div class="social-grid">
       <a class="social ig" href="https://www.instagram.com/happycellstoremxtj" target="_blank" rel="noopener"><span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><rect x="3.2" y="3.2" width="17.6" height="17.6" rx="5.2" stroke="currentColor" stroke-width="2.2"/><circle cx="12" cy="12" r="4.2" stroke="currentColor" stroke-width="2.2"/><circle cx="17.4" cy="6.8" r="1.25" fill="currentColor"/></svg></span><span class="txt"><b>Instagram</b><small>@happycellstoremxtj</small></span><span class="arrow">↗</span></a>
       <a class="social fb" href="https://www.facebook.com/share/14heH8eJWSE/" target="_blank" rel="noopener"><span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M13.7 20v-7h2.4l.4-2.8h-2.8V8.4c0-.8.2-1.4 1.4-1.4h1.5V4.5c-.3 0-1.2-.1-2.3-.1-2.3 0-3.8 1.4-3.8 4v1.8H8v2.8h2.5v7h3.2z"/></svg></span><span class="txt"><b>Facebook</b><small>Happycell</small></span><span class="arrow">↗</span></a>
@@ -343,10 +354,10 @@ h2{font-size:24px}
 
   <section class="contest-period" aria-label="Fechas del concurso" id="contest-period"><span class="period-icon">🏆</span><div><strong>Reto Happycell · 9 al 15 de noviembre</strong><span id="contestStatus">🎮 Práctica abierta · El concurso empieza el 9 de noviembre</span><small id="contestCountdown">Cierre: domingo 15 de noviembre, 11:59 p. m. · Tijuana</small></div></section>
   <section id="juego" aria-labelledby="game-title">
-    <div class="section-head"><div><div class="eyebrow">Minijuego de premios</div><h2 id="game-title">¡Reto de 100 niveles! 🫧</h2><p class="tiny">Explota burbujas, consigue puntos y alcanza el nivel más alto.</p></div></div>
+    <div class="section-head game-heading"><div><div class="eyebrow">Minijuego de premios</div><h2 id="game-title">¡Reto de 100 niveles! 🫧</h2><p class="tiny">Explota burbujas, consigue puntos y alcanza el nivel más alto.</p></div></div>
     <div class="lucky-banner" aria-label="Gran premio para quien gane el reto Happycell">
       <div class="phone-illo" aria-hidden="true"><span class="phone-shine">✨</span></div>
-      <div class="lucky-copy"><strong>🏆 ¡Reto por un iPhone 15 o iPad A16!</strong><small>Premio para el mejor récord validado al cierre del concurso.</small><span class="lucky-odds">📅 Del 9 al 15 de noviembre de 2026</span></div>
+      <div class="lucky-copy"><strong>🏆 ¡RETO POR UN IPHONE 15 O IPAD A16!</strong><small>PREMIO PARA EL MEJOR RÉCORD VALIDADO AL CIERRE DEL CONCURSO.</small><span class="lucky-odds">📅 DEL 9 AL 15 DE NOVIEMBRE DE 2026</span></div>
     </div>
     <div class="game-panel">
       <div class="panel-top">
@@ -428,11 +439,6 @@ h2{font-size:24px}
       <button class="refresh-rank" type="button" id="refreshRanking">🔄 Actualizar ranking</button>
       <div id="rankingRows" class="ranking-rows" aria-live="polite"><p class="ranking-empty">Todavía no hay récords registrados. ¡Sé el primero! 💖</p></div>
       <p class="ranking-notice" id="rankingNotice"><b>🏆 Ranking provisional:</b> los récords en línea requieren revisión antes de elegir al ganador. Si abres el archivo sin publicar el servidor, verás únicamente los registros guardados en este dispositivo.</p>
-    </div>
-    <div class="personal-records-card" aria-labelledby="personalRecordsTitle">
-      <h3 id="personalRecordsTitle">💾 MIS RÉCORDS EN ESTE CELULAR</h3>
-      <div id="personalRows" class="ranking-rows" aria-live="polite"><p class="ranking-empty">Todavía no tienes récords guardados aquí.</p></div>
-      <p>Historial personal de práctica y partidas. No se mezcla con la clasificación oficial ni participa por los premios.</p>
     </div>
   </section>
 
