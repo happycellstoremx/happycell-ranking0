@@ -309,6 +309,12 @@ h2{font-size:24px}
 .rank-row:nth-child(2){background:#faf8ff;border-radius:12px}
 .rank-row:nth-child(3){background:#fff8fa;border-radius:12px}
 .rank-value{font-size:13px}
+
+/* Ranking de práctica y oficial: los récords personales nunca se mezclan con los oficiales. */
+.personal-records-card{margin-top:14px;padding:15px;border-radius:18px;background:linear-gradient(135deg,#fff7fc,#effcff);border:1px solid #e9daef}
+.personal-records-card h3{font-size:17px;margin:0 0 7px;text-align:center;font-family:'Baloo 2','Fredoka',ui-rounded,sans-serif}
+.personal-records-card p{font-size:12px;margin:8px 0;color:#746b86;text-align:center;line-height:1.45}
+.personal-records-card .rank-row{box-shadow:none;border:1px solid #f0e6f4}
 </style>
 </head>
 <body>
@@ -422,6 +428,11 @@ h2{font-size:24px}
       <button class="refresh-rank" type="button" id="refreshRanking">🔄 Actualizar ranking</button>
       <div id="rankingRows" class="ranking-rows" aria-live="polite"><p class="ranking-empty">Todavía no hay récords registrados. ¡Sé el primero! 💖</p></div>
       <p class="ranking-notice" id="rankingNotice"><b>🏆 Ranking provisional:</b> los récords en línea requieren revisión antes de elegir al ganador. Si abres el archivo sin publicar el servidor, verás únicamente los registros guardados en este dispositivo.</p>
+    </div>
+    <div class="personal-records-card" aria-labelledby="personalRecordsTitle">
+      <h3 id="personalRecordsTitle">💾 MIS RÉCORDS EN ESTE CELULAR</h3>
+      <div id="personalRows" class="ranking-rows" aria-live="polite"><p class="ranking-empty">Todavía no tienes récords guardados aquí.</p></div>
+      <p>Historial personal de práctica y partidas. No se mezcla con la clasificación oficial ni participa por los premios.</p>
     </div>
   </section>
 
@@ -982,8 +993,29 @@ h2{font-size:24px}
     catch(e){return []}
   }
   function rankRecords(records){return records.sort((a,b)=>b.level-a.level||b.points-a.points||a.at-b.at).slice(0,30)}
+  function renderPersonalRecords(){
+    const root=$('personalRows');if(!root)return;
+    root.replaceChildren();
+    const records=rankRecords(getRecords()).slice(0,5);
+    if(!records.length){
+      const empty=document.createElement('p');empty.className='ranking-empty';
+      empty.textContent='Aún no hay récords guardados en este celular. 🩷';
+      root.appendChild(empty);return;
+    }
+    records.forEach((item,i)=>{
+      const row=document.createElement('div');row.className='rank-row';
+      const user=document.createElement('span');user.className='rank-player';
+      const mark=document.createElement('b');mark.className='rank-number';mark.textContent=(['🥇','🥈','🥉'][i]||'#'+(i+1))+' ';
+      user.append(mark,document.createTextNode(item.alias.slice(0,22)));
+      const level=document.createElement('span');level.className='rank-value';level.textContent=String(item.level);
+      const pts=document.createElement('span');pts.className='rank-value';pts.textContent=Number(item.points).toLocaleString('es-MX');
+      row.append(user,level,pts);root.appendChild(row);
+    });
+  }
   function displayRecords(){
-    if(leaderMode==='online')return;
+    renderPersonalRecords();
+    // Desde las 00:00 del 9/11 en Tijuana, el ranking principal es SOLO oficial.
+    if(contestPhase()!=='upcoming'||leaderMode==='online')return;
     const rows=$('rankingRows');rows.replaceChildren();
     const entries=rankRecords(getRecords());
     if(!entries.length){const msg=document.createElement('p');msg.className='ranking-empty';msg.textContent='Todavía no hay récords registrados. ¡Sé el primero! 💖';rows.appendChild(msg);return}
@@ -1093,20 +1125,42 @@ h2{font-size:24px}
     rankRefreshInProgress=true;
     const btn=$('refreshRanking');btn.disabled=true;
     try{
+      const mode=contestPhase();
+      if(mode==='upcoming'){
+        // El 8 de noviembre y antes: práctica local. No consultar ni mostrar
+        // resultados oficiales en el ranking principal antes del concurso.
+        leaderMode='local';displayRecords();
+        $('rankStatus').textContent='🟣 RANKING DE PRÁCTICA · SOLO ESTE CELULAR';
+        $('rankStatus').className='rank-online-status offline';
+        $('rankingNotice').textContent='🎮 Las marcas de práctica no participan por los premios. El ranking oficial comienza vacío el lunes 9 de noviembre a las 12:00 a. m. (Tijuana).';
+        return;
+      }
+      // Del 9 al 15 y también al finalizar: SOLO tabla oficial de Supabase.
+      // Nunca rellenar esta clasificación con puntuaciones locales de práctica.
       const res=await fetch('/.netlify/functions/leaderboard',{cache:'no-store'});
-      if(!res.ok)throw new Error('Ranking no disponible');
-      const data=await res.json();if(!Array.isArray(data.records))throw new Error('Respuesta incompleta');
+      if(!res.ok)throw new Error('Ranking oficial no disponible');
+      const data=await res.json();
+      if(!Array.isArray(data.records))throw new Error('Respuesta incompleta');
       leaderMode='online';officialApiOnline=true;
       renderOnlineRecords(data.records);
-      $('rankStatus').textContent='🟢 Ranking en línea · '+(data.records.length?data.records.length+' mejores marcas':'esperando jugadores');
+      $('rankStatus').textContent=(mode==='active'?'🟢 RANKING OFICIAL EN VIVO':'🏁 CLASIFICACIÓN OFICIAL FINAL')+' · '+(data.records.length?data.records.length+' marcas':'sin jugadores todavía');
       $('rankStatus').className='rank-online-status online';
-      $('rankingNotice').textContent='🌍 Tabla compartida y provisional. Mejor nivel, luego más puntos y después la fecha más antigua. El premio mayor requiere revisión de partidas.';
+      $('rankingNotice').textContent=mode==='active'
+        ?'🏆 Solo puntuaciones oficiales de partidas iniciadas durante el concurso. Los resultados son provisionales y requieren validación.'
+        :'🏆 Ranking oficial del 9 al 15 de noviembre, sujeto a revisión antes de premiar.';
     }catch(e){
-      leaderMode='local';displayRecords();
-      $('rankStatus').textContent='🟠 Modo de práctica · no conectado';
-      $('rankStatus').className='rank-online-status offline';
-      $('rankingNotice').textContent='📱 Este ranking solo está guardado en tu dispositivo. Para ver los récords de todos, publica el paquete completo y conecta Supabase.';
-    }finally{btn.disabled=false;rankRefreshInProgress=false}
+      // Nunca mostrar un ranking de práctica como oficial al perder conexión.
+      if(contestPhase()!=='upcoming'){
+        leaderMode='online';renderOnlineRecords([]);
+        $('rankStatus').textContent='🔴 RANKING OFICIAL SIN CONEXIÓN';
+        $('rankStatus').className='rank-online-status offline';
+        $('rankingNotice').textContent='⚠️ No pudimos consultar la clasificación oficial. Los récords personales se conservan más abajo, pero NO se muestran como oficiales. Pulsa actualizar para reintentar.';
+      }else{
+        leaderMode='local';displayRecords();
+        $('rankStatus').textContent='🟣 RANKING DE PRÁCTICA · SOLO ESTE CELULAR';
+        $('rankStatus').className='rank-online-status offline';
+      }
+    }finally{btn.disabled=false;rankRefreshInProgress=false;}
   }
   async function initRealtimeRanking(){
     try{
@@ -1120,7 +1174,7 @@ h2{font-size:24px}
       rankRealtime.channel('happycell-score-live')
         .on('postgres_changes',{event:'*',schema:'public',table:'hc_leaderboard'},()=>loadOnlineRecords())
         .subscribe((status)=>{
-          if(status==='SUBSCRIBED')$('rankStatus').textContent='🟢 Ranking en vivo · conectado';
+          if(status==='SUBSCRIBED'&&contestPhase()==='active')loadOnlineRecords();
         });
     }catch(e){/* El ranking seguirá funcionando mediante consultas periódicas. */}
   }
