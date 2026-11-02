@@ -835,8 +835,8 @@ h2{font-size:24px}
   }
   function begin(){
     const input=$('preGameName');
-    const alias=input.value.replace(/\\s+/g,' ').trim();
-    if(alias.length<2||alias.length>22||!/^[\\p{L}\\p{N} _.-]{2,22}$/u.test(alias)){
+    const alias=input.value.replace(/\s+/g,' ').trim();
+    if(alias.length<2||alias.length>22||!/^[\p{L}\p{N} _.-]{2,22}$/u.test(alias)){
       $('preGameNameError').textContent='Escribe un nombre o apodo de 2 a 22 caracteres (sin símbolos especiales).';
       input.focus();return;
     }
