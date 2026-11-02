@@ -4,5 +4,5 @@ exports.handler=async(event)=>{
  try{
   const data=await db('hc_leaderboard?select=alias,level,points,status&order=level.desc,points.desc,updated_at.asc&limit=10');
   return respond(200,{state:phase(),records:data});
- }catch(e){return respond(503,{error:'Ranking no disponible',records:null})}
+ }catch(e){console.error('Ranking oficial',String(e));return respond(503,{error:'Ranking no disponible',records:null})}
 };
