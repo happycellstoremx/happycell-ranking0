@@ -1,0 +1,69 @@
+HAPPYCELL · RANKING VISUAL EN VIVO · INSTALACIÓN
+==================================================
+
+QUÉ HACE
+- Conserva todos los niveles, premios, voz kawaii y compartir en Facebook.
+- Usa un apodo y la mejor marca por navegador (identificador aleatorio persistente).
+- Durante el concurso del 9 al 15 de noviembre de 2026, registra puntuaciones en Supabase.
+- Muestra las diez mejores marcas de TODOS los dispositivos.
+- Actualiza inmediatamente al recibir cambios por Supabase Realtime.
+- Vuelve a consultar automáticamente cada 10 segundos por si se pierde la conexión.
+- Nunca expone en la tabla los códigos de premios ni teléfonos.
+
+REQUISITOS
+Un proyecto Supabase y un sitio Netlify que publique el proyecto COMPLETO.
+Si solo abres el HTML o subes index.html como archivo estático, funciona en modo práctica;
+NO guarda puntuaciones compartidas.
+
+PASO 1 · CREA TU BASE DE DATOS
+1. Entra en https://supabase.com/dashboard y crea un proyecto nuevo, por ejemplo Happycell.
+2. Abre SQL Editor y ejecuta TODO supabase/01_crear_tablas.sql.
+3. Confirma que aparecen las tablas hc_runs y hc_leaderboard en Table Editor.
+4. Revisa Database > Publications, que hc_leaderboard esté en supabase_realtime.
+
+PASO 2 · CONFIGURA NETLIFY
+1. Crea un repositorio privado de GitHub con el contenido de este ZIP.
+2. En Netlify abre Add new project > Import an existing project y conéctalo.
+3. Publish directory: public. Functions: netlify/functions (netlify.toml ya configurado).
+4. En configuración del proyecto agrega Variables de entorno:
+   SUPABASE_URL = https://<id>.supabase.co
+   SUPABASE_SECRET_KEY = sb_secret_... (SOLO en variables de Netlify, NUNCA en el HTML)
+   SUPABASE_PUBLISHABLE_KEY = sb_publishable_... (llave pública para Realtime)
+5. Vuelve a desplegar el proyecto para aplicar las variables y abre su URL HTTPS.
+
+PASO 3 · PRUEBA EN DOS CELULARES
+1. Abre la URL de Netlify en dos teléfonos distintos.
+2. Antes del concurso, ambos verán 'Modo práctica', y NO se guardarán puntajes oficiales.
+3. Para una prueba de extremo a extremo antes del 9, usa un entorno de ensayo con
+   fechas independientes en la página y en los 2 extremos del servidor / SQL.
+   NO adelantes los resultados reales ni cambies las fechas del concurso ya anunciado.
+4. Durante el concurso, cada persona comienza una partida, llega al resultado,
+   escribe su apodo y pulsa Guardar récord.
+5. Comprueba que aparece en ambos rankings sin recargar la página.
+
+REGLAS DEL RANKING
+- Se ordena por más niveles, después más puntos y por último tiempo de envío.
+- Se conserva el mejor resultado por identificador de navegador, no por apodo.
+- Si un mismo jugador borra datos o cambia navegador, podrá recibir otro identificador.
+- El ranking es PROVISIONAL: para el iPhone 15 o iPad A16 debes revisar registros.
+
+SEGURIDAD Y PRIVACIDAD
+- El juego del navegador NO certifica la validez del nivel ni de los puntos.
+  Incluso con los controles de tiempo y rango, un participante avanzado puede
+  modificar las solicitudes o jugar automatizadamente.
+- Antes de entregar el premio, solicita validación adicional, idealmente
+  una partida supervisada en tienda o un sistema de eventos validado en servidor.
+- Si necesitas identificar personas de forma fiable, agrega Supabase Auth / OTP
+  con consentimiento y aviso de privacidad. No muestres sus teléfonos en el ranking.
+- No incluyas llaves sb_secret en JavaScript del navegador, imágenes ni mensajes.
+- Confirma que tus bases legales y la política de privacidad estén publicadas.
+
+FUNCIONES DEL SERVIDOR
+/.netlify/functions/start         Crear sesión oficial en fecha vigente
+/.netlify/functions/finish        Terminar y guardar el récord provisional
+/.netlify/functions/leaderboard   Consultar top 10 mundial de Happycell
+/.netlify/functions/client-config Entregar URL y clave públicas para Realtime
+
+¿QUÉ FALTA PARA QUE ESTÉ EN VIVO?
+Conectar las cuentas de Supabase y Netlify y desplegar el proyecto. El ZIP contiene
+el código listo para configurar, pero no crea automáticamente tu proyecto externo.
