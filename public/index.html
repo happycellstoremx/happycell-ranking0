@@ -327,6 +327,15 @@ h2{font-size:24px}
 .lucky-copy small{line-height:1.55}
 .lucky-odds{line-height:1.5}
 @media(max-width:365px){.social.map{grid-template-columns:38px minmax(0,1fr) 38px;gap:5px}.lucky-banner{padding:14px 10px}.lucky-copy strong{font-size:16px}}
+/* Nombre obligatorio antes de iniciar y mascota más pequeña durante el juego */
+.overlay .pre-game-name-label{display:block;margin:10px auto 5px;font-size:13px;font-weight:900;color:#a63784;text-align:center}
+.overlay .pre-game-name{display:block;width:min(86%,300px);margin:0 auto;border:2px solid #f5a4d2;border-radius:13px;background:#fff;padding:11px 12px;font:700 15px 'Fredoka',ui-rounded,sans-serif;color:#40344d;text-align:center;outline-offset:2px}
+.overlay .pre-game-name:focus{border-color:#14bfd0;box-shadow:0 0 0 3px #8eeaf247}
+.overlay .pre-game-name-error{min-height:17px;margin:4px auto 7px!important;color:#aa2c58;font-size:11px!important;font-weight:800;text-align:center}
+.logo-mascot .pet-bubble{width:52px;height:52px;padding:6px}
+.mini-pet{right:8px;bottom:8px}
+.mini-pet .pet-label{font-size:9px}
+@media(max-width:380px){.logo-mascot .pet-bubble{width:45px;height:45px}.mini-pet .pet-label{font-size:8px}.overlay .pre-game-name{width:90%}}
 </style>
 </head>
 <body>
@@ -365,7 +374,7 @@ h2{font-size:24px}
         <div class="stat score"><small>BURBUJAS</small><strong id="score">0 / 10</strong></div>
         <div class="stat"><small>NIVEL</small><strong id="level">1</strong></div>
         <div class="stat points-stat"><small>PUNTOS</small><strong id="points">0</strong></div>
-        <div class="stat time" style="text-align:right"><small>TIEMPO</small><strong id="time">22 s</strong></div>
+        <div class="stat time" style="text-align:right"><small>TIEMPO</small><strong id="time">24 s</strong></div>
       </div>
       <div class="progress"><span id="progressBar"></span></div>
       <div class="bonus-header"><span>🩷 Completa <b>HAPPYCELL</b> para ganar puntos</span><button class="voice" id="voiceToggle" type="button" aria-pressed="true">🔊 Voz activa</button></div>
@@ -384,7 +393,10 @@ h2{font-size:24px}
         <div class="overlay" id="overlay">
           <div class="mascot"><img id="overlayLogo" class="mascot-logo" alt="Mascota Happycell" src=""></div>
           <h3 id="overlayTitle">¿Lista tu suerte?</h3>
-          <p id="overlayText">¡Supera 100 niveles! Explota burbujas kawaii, evita las bombas que restan 5 segundos, y forma <b>HAPPYCELL</b> y atrapa la mascota fugaz para avanzar de nivel.</p>
+          <p id="overlayText">¡Supera 100 niveles! Cada nivel dura 24 segundos. Explota burbujas, evita las bombas y atrapa a Happycell.</p>
+          <label class="pre-game-name-label" for="preGameName">👤 Nombre o apodo para participar</label>
+          <input id="preGameName" class="pre-game-name" type="text" maxlength="22" minlength="2" autocomplete="nickname" placeholder="Escribe tu nombre o apodo" required aria-describedby="preGameNameError">
+          <p class="pre-game-name-error" id="preGameNameError" role="alert" aria-live="polite"></p>
           <button type="button" class="main-btn" id="startBtn">✨ ¡QUIERO JUGAR!</button>
         </div>
       </div>
@@ -434,7 +446,7 @@ h2{font-size:24px}
   <section id="ranking" class="ranking-section" aria-labelledby="rankingTitle">
     <div class="section-head"><div><div class="eyebrow">Desafío Happycell 🏆</div><h2 id="rankingTitle">Tabla de récords</h2><p class="tiny">Primero el nivel, después puntos y luego el registro anterior.</p></div></div>
     <div class="ranking-card">
-      <div class="rank-banner"><span>🏆</span><div><strong>Gran premio: iPhone 15 o iPad A16</strong><small>Para el primer lugar al finalizar el reto, sujeto a verificación oficial</small></div></div>
+      <div class="rank-banner"><span>🏆</span><div><strong>🥇 1ER LUGAR: IPHONE 15 O IPAD A16</strong><small>🥈 2DO LUGAR: HAPPYCELLCARE · PREMIOS SUJETOS A VALIDACIÓN</small></div></div>
       <div class="rank-online-status" id="rankStatus" role="status" aria-live="polite">🟡 Conectando ranking en vivo…</div>
       <div class="ranking-head"><span>JUGADOR</span><span>NIVEL</span><span>PUNTOS</span></div>
       <button class="refresh-rank" type="button" id="refreshRanking">🔄 Actualizar ranking</button>
@@ -446,29 +458,31 @@ h2{font-size:24px}
   <section aria-labelledby="prizes-title">
     <div class="section-head"><div><div class="eyebrow">Sorpresas para participantes</div><h2 id="prizes-title">Premios posibles 🎁</h2></div></div>
     <div class="prize-list">
-      <div class="prize-item"><span class="emoji">💎</span><span class="label">Hidrogel gratis</span></div>
-      <div class="prize-item"><span class="emoji">🎀</span><span class="label">Funda gratis</span></div>
-      <div class="prize-item"><span class="emoji">🫧</span><span class="label">Más oportunidades de hidrogel gratis</span></div>
+      <div class="prize-item"><span class="emoji">🛠️</span><span class="label">10% de descuento en reparaciones</span></div>
+      <div class="prize-item"><span class="emoji">🫧</span><span class="label">Hidrogel gratis</span></div>
+      <div class="prize-item"><span class="emoji">💎</span><span class="label">2×1 en hidrogel</span></div>
+      <div class="prize-item"><span class="emoji">🎀</span><span class="label">2×1 en fundas</span></div>
+      <div class="prize-item"><span class="emoji">🔌</span><span class="label">Cargador gratis</span></div>
       <div class="prize-item"><span class="emoji">🧽</span><span class="label">Mantenimiento gratis</span></div>
-      <div class="prize-item"><span class="emoji">💗</span><span class="label">Happycell Care para tu celular</span></div>
-      <div class="prize-item"><span class="emoji">🛍️</span><span class="label">2×1 en accesorios seleccionados</span></div><div class="prize-item"><span class="emoji">💸</span><span class="label">$50 de descuento</span></div>
-      <div class="prize-item vip"><span class="emoji">🏆</span><span class="label">¡iPhone 15 o iPad A16! <small>SOLO PARA EL PRIMER LUGAR VALIDADO</small></span></div>
+      <div class="prize-item vip"><span class="emoji">🏆</span><span class="label">🥇 Primer lugar: iPhone 15 o iPad A16 <small>RANKING OFICIAL · SUJETO A VALIDACIÓN</small></span></div>
+      <div class="prize-item vip"><span class="emoji">💗</span><span class="label">🥈 Segundo lugar: HappycellCare <small>RANKING OFICIAL · SUJETO A VALIDACIÓN</small></span></div>
     </div>
-    <p class="demo-note"><strong>Reglas propuestas:</strong> concurso del 9 al 15 de noviembre de 2026 (hora de Tijuana), con un máximo de 100 niveles. Orden: nivel más alto, después puntos y finalmente registro más antiguo. Las marcas son provisionales y el premio mayor solo se entregará después de revisar y validar la partida. Publicar bases oficiales antes de iniciar.</p>
+    <p class="demo-note"><strong>Reglas propuestas:</strong> concurso del 9 al 15 de noviembre de 2026 (hora de Tijuana), con un máximo de 100 niveles. Orden: nivel más alto, después puntos y finalmente registro más antiguo. Las marcas son provisionales; el primer lugar recibe iPhone 15 o iPad A16 y el segundo HappycellCare, sujetos a revisión de partidas y a las bases oficiales. Los premios sorpresa del juego se asignan automáticamente al terminar.</p>
   </section>
-  <footer class="foot"><strong>HAPPYCELL</strong> · Tu tecnología, en buenas manos 💕<div>Horario habitual: 9:00 a. m. a 6:00 p. m.</div><div class="credit">El juego no comprueba si se dio "me gusta" a una publicación. Las redes sociales se visitan directamente desde los enlaces.</div></footer>
+  <footer class="foot"><strong>HAPPYCELL</strong> · Tu tecnología, en buenas manos 💕<div>Horario habitual: 9:00 a. m. a 6:00 p. m.</div></footer>
 </main>
 <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.78.0/dist/umd/supabase.min.js"></script>
 <script>
 (()=>{
   'use strict';
+  // Premios sorpresa independientes del ranking del concurso. Total: 100%.
   const PRIZES=[
-    {id:'hidrogel',name:'¡Hidrogel gratis!',spoken:'un hidrogel gratis',weight:5},
-    {id:'funda',name:'¡Funda gratis!',spoken:'una funda gratis',weight:3},
-    {id:'mantenimiento',name:'¡Mantenimiento gratis!',spoken:'un mantenimiento gratis',weight:2},
-    {id:'care',name:'¡Happycell Care para tu celular!',spoken:'Happycell Care para tu celular',weight:1},
-    {id:'50',name:'¡$50 de descuento!',spoken:'cincuenta pesos de descuento',weight:1},
-    {id:'2x1',name:'¡2×1 en accesorios seleccionados!',spoken:'dos por uno en accesorios seleccionados',weight:1}
+    {id:'reparacion10',name:'¡10% de descuento en reparaciones!',spoken:'diez por ciento de descuento en reparaciones',weight:10},
+    {id:'hidrogel',name:'¡Hidrogel gratis!',spoken:'un hidrogel gratis',weight:40},
+    {id:'hidrogel2x1',name:'¡2×1 en hidrogel!',spoken:'dos por uno en hidrogel',weight:10},
+    {id:'fundas2x1',name:'¡2×1 en fundas!',spoken:'dos por uno en fundas',weight:10},
+    {id:'cargador',name:'¡Cargador gratis!',spoken:'un cargador gratis',weight:10},
+    {id:'mantenimiento',name:'¡Mantenimiento gratis!',spoken:'un mantenimiento gratis',weight:20}
   ];
   const MAX_LEVEL=100;
   const LEVELS=Array.from({length:MAX_LEVEL},(_,i)=>{
@@ -476,13 +490,13 @@ h2{font-size:24px}
     const difficulty=Math.pow(lvl/MAX_LEVEL,1.35);
     return {
       goal:Math.min(88,10+Math.floor(lvl*0.78)+Math.floor(difficulty*18)),
-      time:Math.max(11,24-Math.floor(lvl/7)-Math.floor(difficulty*5)),
+      time:24,
       maxBubbles:Math.min(26,11+Math.floor(lvl/8)+Math.floor(difficulty*6)),
       spawn:Math.max(120,470-Math.floor(lvl*2.8)-Math.floor(difficulty*70)),
       lifeMin:Math.max(700,2250-Math.floor(lvl*11)-Math.floor(difficulty*620)),
       lifeMax:Math.max(1100,3150-Math.floor(lvl*13)-Math.floor(difficulty*760)),
-      bubbleMin:Math.max(20,56-Math.floor(lvl/4)-Math.floor(difficulty*12)),
-      bubbleMax:Math.max(38,84-Math.floor(lvl/3)-Math.floor(difficulty*14))
+      bubbleMin:Math.max(18,43-Math.floor(lvl/5)-Math.floor(difficulty*6)),
+      bubbleMax:Math.max(32,64-Math.floor(lvl/4)-Math.floor(difficulty*9))
     };
   });
   const WA='526651394727',KEY='happycell_bubble_reward_v100',BOARD_KEY='happycell_local_records_v100',PLAYER_KEY='happycell_player_alias_v100';
@@ -516,10 +530,10 @@ h2{font-size:24px}
   function currentLevelCfg(){
     if(levelIndex<LEVELS.length)return LEVELS[levelIndex];
     const extra=levelIndex-LEVELS.length+1;
-    return {goal:Math.min(65,30+extra*3),time:Math.max(17,26-Math.floor(extra/2)),
+    return {goal:Math.min(65,30+extra*3),time:24,
       maxBubbles:Math.min(25,20+Math.floor(extra/2)),spawn:Math.max(170,280-extra*7),
       lifeMin:Math.max(900,1450-extra*40),lifeMax:Math.max(1180,2200-extra*42),
-      bubbleMin:Math.max(30,40-Math.floor(extra/2)),bubbleMax:Math.max(48,66-Math.floor(extra/2))};
+      bubbleMin:Math.max(18,32-Math.floor(extra/2)),bubbleMax:Math.max(32,48-Math.floor(extra/2))};
   }
   // El iPhone 15 o iPad A16 no forma parte de los premios aleatorios: gana el campeón del reto.
   function drawPrize(){
@@ -723,7 +737,7 @@ h2{font-size:24px}
     const cfg=currentLevelCfg();
     const normalSize=(cfg.bubbleMin+cfg.bubbleMax)/2;
     const shrinkSteps=Math.floor(levelIndex/5);
-    const size=Math.round(normalSize*Math.pow(0.95,shrinkSteps)*10)/10;
+    const size=Math.max(22,Math.round(normalSize*0.72*Math.pow(0.95,shrinkSteps)));
     el.style.setProperty('--secret-size',size+'px');
     const w=field.clientWidth,h=field.clientHeight;
     const pad=9;
@@ -819,7 +833,22 @@ h2{font-size:24px}
     spawnTimer=setInterval(()=>{bubble();if(Math.random()>.32)bubble()},cfg.spawn);
     clockTimer=setInterval(()=>{if(phase!=='playing')return;remaining--;update();if(remaining<=0)handleTimeout()},1000);
   }
-  function begin(){highestLevel=0;pickerLevel=0;reward=null;points=0;lettersCollected=0;completedWords=0;updateWordTrack();$('recordSend').classList.add('hidden');$('recordStatus').textContent='';officialRunId=null;officialStartPromise=startOfficialRun();startLevel(1)}
+  function begin(){
+    const input=$('preGameName');
+    const alias=input.value.replace(/\\s+/g,' ').trim();
+    if(alias.length<2||alias.length>22||!/^[\\p{L}\\p{N} _.-]{2,22}$/u.test(alias)){
+      $('preGameNameError').textContent='Escribe un nombre o apodo de 2 a 22 caracteres (sin símbolos especiales).';
+      input.focus();return;
+    }
+    $('preGameNameError').textContent='';
+    input.value=alias;
+    try{localStorage.setItem(PLAYER_KEY,alias)}catch(e){}
+    $('playerName').value=alias;
+    currentPrizeRecord=null;
+    highestLevel=0;pickerLevel=0;reward=null;points=0;lettersCollected=0;completedWords=0;
+    updateWordTrack();$('recordSend').classList.add('hidden');$('recordStatus').textContent='';
+    officialRunId=null;officialStartPromise=startOfficialRun();startLevel(1);
+  }
   function bubble(){
     const cfg=currentLevelCfg();
     if(phase!=='playing'||bubbles.size>=cfg.maxBubbles)return;
@@ -880,31 +909,38 @@ h2{font-size:24px}
     clearInterval(spawnTimer);clearInterval(clockTimer);clearInterval(cheerTimer);clearTimeout(cheerHideTimer);spawnTimer=null;clockTimer=null;cheerTimer=null;cheerHideTimer=null;cheerEl.classList.remove('visible');petEl.classList.remove('cheering');clearTimeout(secretSpawnTimer);secretSpawnTimer=null;removeSecret();for(const el of [...bubbles])removeBubble(el);
     highestLevel=Math.max(highestLevel,levelIndex+1);phase='transition';update();makeSound(930,.18);
     if(bySecret){placeCelebration('','')}else{placeCelebration('🌟 ¡Nivel '+highestLevel+' superado!','Prepárate para el nivel '+(highestLevel+1)+'...')}
-    if(highestLevel>=MAX_LEVEL){placeCelebration('👑 ¡Completaste los 100 niveles!','¡Ve por tu premio sorpresa y registra tu récord!');transitionTimer=setTimeout(()=>preparePrizePhase(true),1600);return;}
+    if(highestLevel>=MAX_LEVEL){placeCelebration('👑 ¡Completaste los 100 niveles!','¡Ve por tu premio sorpresa y registra tu récord!');transitionTimer=setTimeout(()=>finishWithPrize(),700);return;}
     transitionTimer=setTimeout(()=>startLevel(highestLevel+1),1350);
   }
   function handleTimeout(){
+    if(phase!=='playing')return;
+    finishWithPrize();
+  }
+  // El premio aleatorio se asigna SIN elegir burbujas adicionales.
+  // Solo uno por partida, usando el sorteo ponderado seguro de PRIZES.
+  function finishWithPrize(){
+    if(phase==='won')return;
     clearGame();
-    preparePrizePhase(false);
-  }
-  function preparePrizePhase(allDone){
-    clearGame();phase='picker';pickerLevel=Math.max(0,highestLevel);remaining=0;update();makeSound(820,.18);
-    const title=document.createElement('div');title.className='picker-caption';title.textContent='🎁 ¡TU RETO TERMINÓ!';
-    const sub=document.createElement('div');sub.className='picker-sub';sub.textContent='Superaste '+pickerLevel+' niveles. Elige tu burbuja sorpresa y registra tu récord.';
-    layer.append(title,sub);
-    const grid=document.createElement('div');grid.className='picker-grid';
-    for(let i=0;i<9;i++){
-      let btn=document.createElement('button');btn.type='button';btn.className='gift';btn.setAttribute('aria-label','Elegir burbuja sorpresa '+(i+1));btn.innerHTML='<span>🎁</span><small>SUERTE</small>';btn.onclick=()=>claim(btn);grid.appendChild(btn)
-    }
-    layer.appendChild(grid)
-  }
-  function claim(btn){
-    if(phase!=='picker')return;
+    pickerLevel=Math.max(0,highestLevel);
+    remaining=0;
     let prize,code;
-    try{prize=drawPrize();code=makeCode()}catch(e){showOverlay('No se pudo sortear 😿','Tu navegador no permite un sorteo seguro. Prueba desde Chrome o Safari actualizado.','🔄 REINTENTAR');phase='lost';return}
-    phase='won';reward=prize;
-    const b=btn.getBoundingClientRect(),f=field.getBoundingClientRect();sparkle(b.left-f.left+b.width/2,b.top-f.top+b.height/2,true);makeSound(prize.vip?1200:950,.18);setTimeout(()=>makeSound(prize.vip?1500:1230,.2),120);
-    const record={date:today(),id:prize.id,code,level:pickerLevel,points,completedWords,createdAt:new Date().toISOString()};currentPrizeRecord=record;save(record);showResult(prize,code,pickerLevel);layer.innerHTML='';field.style.minHeight='75px';field.style.height='80px';let wins=document.createElement('div');wins.style.cssText='height:100%;display:grid;place-items:center;font-size:34px';wins.textContent='🎉 🫧 🎁 🫧 🎉';layer.appendChild(wins);speakPrize(prize)
+    try{prize=drawPrize();code=makeCode()}catch(e){
+      phase='lost';
+      showOverlay('No se pudo sortear 😿','El sorteo necesita un navegador actualizado con números aleatorios seguros.','🔄 REINTENTAR');
+      return;
+    }
+    phase='won';reward=prize;update();
+    makeSound(950,.18);
+    setTimeout(()=>makeSound(1230,.2),120);
+    sparkle(field.clientWidth*.5,field.clientHeight*.5,true);
+    const record={date:today(),id:prize.id,code,level:pickerLevel,points,completedWords,createdAt:new Date().toISOString()};
+    currentPrizeRecord=record;save(record);
+    layer.innerHTML='';
+    field.style.minHeight='75px';field.style.height='80px';
+    const wins=document.createElement('div');wins.style.cssText='height:100%;display:grid;place-items:center;font-size:34px';
+    wins.textContent='🎉 🫧 🎁 🫧 🎉';layer.appendChild(wins);
+    showResult(prize,code,pickerLevel);
+    speakPrize(prize);
   }
   function updatePrizeWhatsapp(){
     const link=$('redeemLink'),record=currentPrizeRecord||load();
@@ -991,8 +1027,8 @@ h2{font-size:24px}
     $('playerName').value=getLastAlias();$('recordSend').classList.add('hidden');$('recordStatus').textContent='';
     refreshFacebookScore();
     $('result').classList.remove('hidden');
-    // Si el jugador ya eligió apodo antes, publica el récord al terminar.
-    if(getLastAlias().trim().length>=2){setTimeout(()=>{if(phase==='won')registerRecord({preventDefault(){}})},200);}
+    // El apodo se solicitó antes de jugar: registra automáticamente el resultado.
+    if(getLastAlias().trim().length>=2){setTimeout(()=>{if(phase==='won'&&currentPrizeRecord?.code===code)registerRecord({preventDefault(){}})},200);}
     setTimeout(()=>$('result').scrollIntoView({behavior:'smooth',block:'nearest'}),250);
   }
   // Registros locales para probar la interfaz. Nunca se deben usar para adjudicar el premio real.
@@ -1159,7 +1195,7 @@ h2{font-size:24px}
       leaderMode='online';renderOnlineRecords([]);
       $('rankStatus').textContent='🔴 RANKING EN LÍNEA SIN CONEXIÓN';
       $('rankStatus').className='rank-online-status offline';
-      $('rankingNotice').textContent='⚠️ No se pudo consultar el ranking compartido. Tus marcas personales permanecen abajo. Pulsa Actualizar para reintentar.';
+      $('rankingNotice').textContent='⚠️ No se pudo consultar el ranking compartido. Comprueba tu conexión y pulsa Actualizar para reintentar.';
     }finally{btn.disabled=false;rankRefreshInProgress=false;}
   }
   async function initRealtimeRanking(){
@@ -1185,9 +1221,17 @@ h2{font-size:24px}
   setInterval(loadOnlineRecords,10000);
   document.addEventListener('visibilitychange',()=>{if(!document.hidden)loadOnlineRecords()});
   $('recordForm').addEventListener('submit',registerRecord);
-  $('replayBtn').onclick=()=>{begin();field.scrollIntoView({behavior:'smooth',block:'center'})};
+  $('replayBtn').onclick=()=>{
+    clearGame();phase='intro';$('result').classList.add('hidden');field.style.minHeight='';field.style.height='';
+    $('preGameName').value=getLastAlias();$('preGameNameError').textContent='';
+    showOverlay('🫧 ¡Otra partida!','Confirma tu nombre para comenzar otra ronda de 24 segundos por nivel.','✨ ¡JUGAR DE NUEVO!');
+    field.scrollIntoView({behavior:'smooth',block:'center'});
+  };
   displayRecords();
   $('startBtn').onclick=begin;
+  $('preGameName').value=getLastAlias();
+  $('preGameName').addEventListener('keydown',event=>{if(event.key==='Enter'){event.preventDefault();begin()}});
+
   $('voiceToggle').onclick=()=>{voiceOn=!voiceOn;$('voiceToggle').textContent=voiceOn?'🔊 Voz activa':'🔇 Voz apagada';$('voiceToggle').setAttribute('aria-pressed',String(voiceOn));if(!voiceOn&&'speechSynthesis' in window)speechSynthesis.cancel();else makeSound(700,.09)};
   $('repeatVoice').onclick=()=>reward&&speakPrize(reward);
   $('voiceTry').onclick=()=>{
