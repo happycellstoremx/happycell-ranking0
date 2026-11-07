@@ -497,17 +497,19 @@ h2{font-size:24px}
   const LEVELS=Array.from({length:MAX_LEVEL},(_,i)=>{
     const stage=Math.floor(i/5);
     return {
-      // Doble objetivo y doble frecuencia de aparición respecto al reto anterior.
-      goal:2*(10+2*stage),
+      // Modo extremo: vuelve a duplicar los objetivos y la frecuencia.
+      // Niveles 1-5: 40 burbujas; niveles 46-50: 112.
+      goal:4*(10+2*stage),
       time:24,
-      maxBubbles:Math.min(22,11+Math.floor(stage*0.55)),
-      spawn:Math.max(100,Math.round((490-14*stage)/2)),
-      // Menor permanencia: exige reflejos sin saturar los teléfonos.
-      lifeMin:Math.max(700,Math.round((2200-55*stage)*.7)),
-      lifeMax:Math.max(980,Math.round((3180-85*stage)*.7)),
+      // Deja suficientes burbujas visibles en pantallas móviles.
+      maxBubbles:Math.min(26,15+Math.floor(stage*1.2)),
+      spawn:Math.max(90,Math.round((490-14*stage)/4)),
+      // Más velocidad visual y menos tiempo de reacción.
+      lifeMin:Math.max(850,Math.round((2200-55*stage)*.7*.85)),
+      lifeMax:Math.max(1080,Math.round((3180-85*stage)*.7*.85)),
       bubbleMin:Math.max(18,43-Math.floor(stage*1.25)),
       bubbleMax:Math.max(32,64-Math.floor(stage*1.5)),
-      bob:Math.max(.7,(2.35-stage*.07)*.65)
+      bob:Math.max(.55,(2.35-stage*.07)*.65*.7)
     };
   });
   const WA='526651394727',KEY='happycell_bubble_reward_v100',BOARD_KEY='happycell_local_records_v100',PLAYER_KEY='happycell_player_alias_v100';
