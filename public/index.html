@@ -426,14 +426,14 @@ h2{font-size:24px}
                 <li><span aria-hidden="true">🔤</span><span><strong>Forma HAPPYCELL</strong> atrapando las letras en orden para ganar puntos extra y avanzar más rápido.</span></li>
                 <li><span aria-hidden="true">💖</span><span><strong>Atrapa la mascota fugaz</strong> para pasar al siguiente nivel.</span></li>
                 <li><span aria-hidden="true">🏆</span><span><strong>Consigue el récord más alto:</strong> cuentan primero los niveles superados y después los puntos.</span></li>
-                <li><span aria-hidden="true">🎁</span><span><strong>¡Premio sorpresa!</strong> Al terminar tu partida aparecerá automáticamente tu premio. Se registra tu resultado en línea.</span></li>
+                <li><span aria-hidden="true">🎁</span><span><strong>¡Premio sorpresa!</strong> Al terminar tu partida aparecerá automáticamente tu premio. Tu récord se enviará al ranking si hay conexión.</span></li>
               </ol>
             </div>
             <button type="button" class="main-btn instructions-next" id="continueToName">✅ ENTENDIDO, CONTINUAR</button>
           </div>
           <div class="name-screen hidden" id="nameScreen">
             <h3 id="overlayTitle">👤 ¡BIENVENIDO AL RETO!</h3>
-            <p id="overlayText">Escribe tu nombre o apodo. Tu puntuación se guardará en el ranking compartido.</p>
+            <p id="overlayText">Escribe tu nombre o apodo. Intentaremos guardar tu puntuación en el ranking compartido.</p>
             <label class="pre-game-name-label" for="preGameName">Nombre o apodo del jugador</label>
             <input id="preGameName" class="pre-game-name" type="text" maxlength="22" minlength="2" autocomplete="nickname" placeholder="Ej. HappyFan23" required aria-describedby="preGameNameError">
             <p class="pre-game-name-error" id="preGameNameError" role="alert" aria-live="polite"></p>
@@ -774,7 +774,7 @@ h2{font-size:24px}
     $('instructionsScreen').classList.add('hidden');
     $('nameScreen').classList.remove('hidden');
     $('overlayTitle').textContent='👤 ¡BIENVENIDO AL RETO!';
-    $('overlayText').textContent='Escribe tu nombre o apodo. Tu puntuación se guardará en el ranking compartido.';
+    $('overlayText').textContent='Escribe tu nombre o apodo. Intentaremos guardar tu puntuación en el ranking compartido.';
     $('startBtn').textContent='🫧 ¡EMPEZAR A JUGAR!';
     overlay.classList.remove('hidden');
     $('preGameName').focus();
