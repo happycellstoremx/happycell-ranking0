@@ -342,6 +342,24 @@ h2{font-size:24px}
 .mini-pet{right:8px;bottom:8px}
 .mini-pet .pet-label{font-size:9px}
 @media(max-width:380px){.logo-mascot .pet-bubble{width:45px;height:45px}.mini-pet .pet-label{font-size:8px}.overlay .pre-game-name{width:90%}}
+/* Instrucciones antes de cada partida, con lectura cómoda en celular. */
+.overlay{overflow:hidden;padding:12px 12px 10px}
+.overlay .instructions-screen{display:flex;flex-direction:column;align-items:stretch;gap:8px;width:100%;max-width:370px;height:100%;min-height:0}
+.overlay .instructions-scroll{flex:1 1 auto;min-height:0;overflow-y:auto;overscroll-behavior:contain;padding:0 4px 5px;scrollbar-width:thin}
+.overlay .instructions-screen .mascot-logo{width:48px;max-height:50px;margin:auto}
+.overlay .instructions-screen h3{font-size:19px;margin:1px auto 4px}
+.overlay .instructions-intro{max-width:340px!important;margin:0 auto 7px!important;font-size:12px!important;line-height:1.4!important;color:#685577}
+.instructions-list{list-style:none;display:grid;grid-template-columns:1fr;gap:5px;margin:0;padding:0;text-align:left}
+.instructions-list li{display:flex;align-items:flex-start;gap:8px;background:#ffffffdd;border:1px solid #f9cde6;border-radius:11px;padding:7px 9px;color:#654d6a;font-size:11.5px;line-height:1.35}
+.instructions-list li>span:first-child{font-size:18px;line-height:1.15;flex:0 0 25px}
+.instructions-list strong{color:#ad367d;font-weight:900}
+.overlay .instructions-next{width:100%;flex:0 0 auto;margin:0;padding:10px 12px;min-height:43px;font-size:13px}
+.overlay .name-screen{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;width:100%;height:100%}
+.overlay .name-screen h3{margin-bottom:3px}
+.overlay .name-screen .pre-game-name-label{margin:3px 0}
+.overlay .name-screen .pre-game-name{width:min(95%,320px)}
+.overlay .instructions-back{background:transparent;border:0;color:#9e3d83;text-decoration:underline;text-underline-offset:3px;font:800 12px 'Fredoka',ui-rounded,sans-serif;padding:6px 10px;cursor:pointer}
+@media(max-width:380px){.overlay{padding:9px 9px 8px}.instructions-list li{padding:6px 8px;font-size:11px;gap:6px}.overlay .instructions-screen h3{font-size:18px}}
 </style>
 </head>
 <body>
@@ -397,13 +415,31 @@ h2{font-size:24px}
         <div id="mascotCheer" class="mascot-cheer" role="status" aria-live="polite" aria-atomic="true"></div>
         <div class="mini-pet logo-mascot" aria-hidden="true"><div class="pet-bubble"><span class="pet-spark a">✨</span><img id="gameMascotLogo" alt="Mascota Happycell" src=""><span class="pet-spark b">💗</span></div><span class="pet-label">Happy!</span></div>
         <div class="overlay" id="overlay">
-          <div class="mascot"><img id="overlayLogo" class="mascot-logo" alt="Mascota Happycell" src=""></div>
-          <h3 id="overlayTitle">¿Lista tu suerte?</h3>
-          <p id="overlayText">¡Supera 50 niveles! Cada nivel dura 24 segundos. Explota burbujas, evita las bombas y atrapa a Happycell.</p>
-          <label class="pre-game-name-label" for="preGameName">👤 Nombre o apodo para participar</label>
-          <input id="preGameName" class="pre-game-name" type="text" maxlength="22" minlength="2" autocomplete="nickname" placeholder="Escribe tu nombre o apodo" required aria-describedby="preGameNameError">
-          <p class="pre-game-name-error" id="preGameNameError" role="alert" aria-live="polite"></p>
-          <button type="button" class="main-btn" id="startBtn">✨ ¡QUIERO JUGAR!</button>
+          <div class="instructions-screen" id="instructionsScreen" aria-labelledby="instructionsTitle">
+            <div class="instructions-scroll">
+              <div class="mascot"><img id="overlayLogo" class="mascot-logo" alt="Mascota Happycell" src=""></div>
+              <h3 id="instructionsTitle">🎮 ¡APRENDE A JUGAR!</h3>
+              <p class="instructions-intro">50 niveles de desafío. Tienes <strong>24 segundos por nivel</strong> y el juego se vuelve más rápido cada 5 niveles.</p>
+              <ol class="instructions-list">
+                <li><span aria-hidden="true">🫧</span><span><strong>Explota las burbujas</strong> tocándolas hasta completar el objetivo del nivel antes de que termine el tiempo.</span></li>
+                <li><span aria-hidden="true">💣</span><span><strong>Evita las bombas:</strong> cada una te quita 5 segundos.</span></li>
+                <li><span aria-hidden="true">🔤</span><span><strong>Forma HAPPYCELL</strong> atrapando las letras en orden para ganar puntos extra y avanzar más rápido.</span></li>
+                <li><span aria-hidden="true">💖</span><span><strong>Atrapa la mascota fugaz</strong> para pasar al siguiente nivel.</span></li>
+                <li><span aria-hidden="true">🏆</span><span><strong>Consigue el récord más alto:</strong> cuentan primero los niveles superados y después los puntos.</span></li>
+                <li><span aria-hidden="true">🎁</span><span><strong>¡Premio sorpresa!</strong> Al terminar tu partida aparecerá automáticamente tu premio. Se registra tu resultado en línea.</span></li>
+              </ol>
+            </div>
+            <button type="button" class="main-btn instructions-next" id="continueToName">✅ ENTENDIDO, CONTINUAR</button>
+          </div>
+          <div class="name-screen hidden" id="nameScreen">
+            <h3 id="overlayTitle">👤 ¡BIENVENIDO AL RETO!</h3>
+            <p id="overlayText">Escribe tu nombre o apodo. Tu puntuación se guardará en el ranking compartido.</p>
+            <label class="pre-game-name-label" for="preGameName">Nombre o apodo del jugador</label>
+            <input id="preGameName" class="pre-game-name" type="text" maxlength="22" minlength="2" autocomplete="nickname" placeholder="Ej. HappyFan23" required aria-describedby="preGameNameError">
+            <p class="pre-game-name-error" id="preGameNameError" role="alert" aria-live="polite"></p>
+            <button type="button" class="main-btn" id="startBtn">🫧 ¡EMPEZAR A JUGAR!</button>
+            <button type="button" class="instructions-back" id="backToInstructions">📖 Volver a ver las instrucciones</button>
+          </div>
         </div>
       </div>
       <p class="mini-note">🌈 <b>¡Busca los secretos!</b> Evita las bombas 💣: quitan <b>5 segundos</b>. Atrapa al Happycell fugaz para pasar de nivel y completa <b>HAPPYCELL</b> para sumar puntos.</p>
@@ -727,7 +763,30 @@ h2{font-size:24px}
   }
   function sparkle(x,y,big=false){const ring=document.createElement('div');ring.className='pop';ring.style.cssText=`left:${x-20}px;top:${y-20}px;width:40px;height:40px`;field.appendChild(ring);setTimeout(()=>ring.remove(),420);for(let i=0;i<(big?24:8);i++){let s=document.createElement('span');s.className='spark';s.textContent=['✨','💗','✦','⭐','🩵','🌸'][rand(6)];s.style.cssText=`left:${x}px;top:${y}px;--dx:${rand(260)-130}px;--dy:${rand(250)-145}px`;field.appendChild(s);setTimeout(()=>s.remove(),1000)}}
   function removeBubble(el){clearTimeout(el._timeout);bubbles.delete(el);el.remove()}
-  function showOverlay(title,desc,button){$('overlayTitle').textContent=title;$('overlayText').innerHTML=desc;$('startBtn').textContent=button;overlay.classList.remove('hidden')}
+  function showInstructions(){
+    $('instructionsScreen').classList.remove('hidden');
+    $('nameScreen').classList.add('hidden');
+    overlay.classList.remove('hidden');
+    const scroll=$('instructionsScreen').querySelector('.instructions-scroll');
+    if(scroll)scroll.scrollTop=0;
+  }
+  function showNameScreen(){
+    $('instructionsScreen').classList.add('hidden');
+    $('nameScreen').classList.remove('hidden');
+    $('overlayTitle').textContent='👤 ¡BIENVENIDO AL RETO!';
+    $('overlayText').textContent='Escribe tu nombre o apodo. Tu puntuación se guardará en el ranking compartido.';
+    $('startBtn').textContent='🫧 ¡EMPEZAR A JUGAR!';
+    overlay.classList.remove('hidden');
+    $('preGameName').focus();
+  }
+  function showOverlay(title,desc,button){
+    $('instructionsScreen').classList.add('hidden');
+    $('nameScreen').classList.remove('hidden');
+    $('overlayTitle').textContent=title;
+    $('overlayText').textContent=desc;
+    $('startBtn').textContent=button;
+    overlay.classList.remove('hidden');
+  }
   function placeCelebration(msg,sub){layer.innerHTML='';const a=document.createElement('div');a.className='picker-caption';a.style.top='34%';a.style.fontSize='24px';a.textContent=msg;const b=document.createElement('div');b.className='picker-sub';b.style.top='47%';b.style.fontSize='13px';b.textContent=sub;layer.append(a,b)}
   function scheduleSecret(){
     clearTimeout(secretSpawnTimer);
@@ -843,6 +902,8 @@ h2{font-size:24px}
     clockTimer=setInterval(()=>{if(phase!=='playing')return;remaining--;update();if(remaining<=0)handleTimeout()},1000);
   }
   function begin(){
+    // Nunca se inicia una partida sin haber pasado por las instrucciones.
+    if($('nameScreen').classList.contains('hidden'))return;
     const input=$('preGameName');
     const alias=input.value.replace(/\s+/g,' ').trim();
     if(alias.length<2||alias.length>22||!/^[\p{L}\p{N} _.-]{2,22}$/u.test(alias)){
@@ -1233,12 +1294,15 @@ h2{font-size:24px}
   $('replayBtn').onclick=()=>{
     clearGame();phase='intro';$('result').classList.add('hidden');field.style.minHeight='';field.style.height='';
     $('preGameName').value=getLastAlias();$('preGameNameError').textContent='';
-    showOverlay('🫧 ¡Otra partida!','Confirma tu nombre para comenzar otra ronda de 24 segundos por nivel.','✨ ¡JUGAR DE NUEVO!');
+    showInstructions();
     field.scrollIntoView({behavior:'smooth',block:'center'});
   };
   displayRecords();
+  $('continueToName').onclick=showNameScreen;
+  $('backToInstructions').onclick=showInstructions;
   $('startBtn').onclick=begin;
   $('preGameName').value=getLastAlias();
+  showInstructions();
   $('preGameName').addEventListener('keydown',event=>{if(event.key==='Enter'){event.preventDefault();begin()}});
 
   $('voiceToggle').onclick=()=>{voiceOn=!voiceOn;$('voiceToggle').textContent=voiceOn?'🔊 Voz activa':'🔇 Voz apagada';$('voiceToggle').setAttribute('aria-pressed',String(voiceOn));if(!voiceOn&&'speechSynthesis' in window)speechSynthesis.cancel();else makeSound(700,.09)};
